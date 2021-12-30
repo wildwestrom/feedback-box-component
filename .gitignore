@@ -1,0 +1,7 @@
+/.shadow-cljs/
+/.lsp/
+/.log/
+/.clj-kondo/
+/node_modules/
+public/js/
+/target/

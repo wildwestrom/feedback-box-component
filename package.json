@@ -1,0 +1,16 @@
+{
+    "scripts": {
+        "deps": "pnpm install",
+        "watch": "shadow-cljs watch app",
+        "release": "shadow-cljs release app",
+        "clean": "rm -rf target; rm -rf public/js"
+    },
+    "dependencies": {
+        "create-react-class": "latest",
+        "react": "latest",
+        "react-dom": "latest"
+    },
+    "devDependencies": {
+        "shadow-cljs": "latest"
+    }
+}
