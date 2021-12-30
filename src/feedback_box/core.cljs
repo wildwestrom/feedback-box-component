@@ -76,7 +76,7 @@
 (defn start []
    ;; start is called by init and after code reloading finishes
    ;; this is controlled by the :after-load in the config
-  (let [div-to-mount (js/document.getElementById "feedbackbutton")
+  (let [div-to-mount (js/document.getElementById "feedbackbox")
         get-attr (fn [attrname] (.getAttribute div-to-mount attrname))
         endpoint (get-attr "endpoint")
         greeting (get-attr "greeting")

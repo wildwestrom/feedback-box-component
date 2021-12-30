@@ -11,8 +11,10 @@ pnpm deps && pnpm release
 
 ## Usage
 
+This component expects a `<div>` with an `id` of `feedbackbox`.
+
 ```html
-    <div id="feedbackbutton"
+    <div id="feedbackbox"
          endpoint="/endpoint"
          greeting="Send us feedback please!"
          feedback-placeholder="Put your feedback here."
