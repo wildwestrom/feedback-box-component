@@ -4,6 +4,10 @@
             [garden.selectors :as selector]
             [rum.core :as rum]))
 
+(def endpoint (atom ""))
+
+
+
 (def styles
   (css
    [:#warning {:background :yellow
@@ -29,6 +33,8 @@
                        :gap ".5rem"}
      [:input {:flex-grow 1}]]]))
 
+
+
 (defn send-data [endpoint]
   (let [form-data (js/FormData.
                    (js/document.getElementById "feedback-form"))]
@@ -36,8 +42,9 @@
       {:body form-data})))
 
 (rum/defc feedback-box
-  [endpoint & options]
-  (let [{:keys [greeting
+  [options]
+  (let [{:keys [endpoint
+                greeting
                 feedback-placeholder
                 email-placeholder]}
         ;; I'd like to destructure using `:or`, but unfortunately,
@@ -45,6 +52,11 @@
         ;; regardless of whether they're `nil` or not.
         options]
     [:<>
+    [:div {:id "backtoblack"
+         :class "prettyhover"
+         :on-click 
+          (fn [] 
+           (rum/mount (init-feedback-button) (. js/document (getElementById "fbbi"))))} "📣" ]
      [:style styles]
      [:form.form-container#feedback-form
       {:on-submit #(do (.preventDefault %)
@@ -73,20 +85,36 @@
       [:input {:type :submit
                :required true}]]]))
 
+(rum/defc init-feedback-button
+  []
+  (let [ep (.getAttribute (. js/document (getElementById "dartar")) "data-endpoint")
+        gr (.getAttribute (. js/document (getElementById "dartar")) "data-greeting")
+        fp (.getAttribute (. js/document (getElementById "dartar")) "data-feedback-placeholder")
+        emp (.getAttribute (. js/document (getElementById "dartar")) "data-email-placeholder")]
+  [:div {:id "fbbi"
+         :class "prettyhover"
+         :on-click 
+          (fn [] 
+           (rum/mount (feedback-box 
+                             {:endpoint ep
+                             :greeting gr
+                             :feedback-placeholder fp
+                             :email-placeholder emp}) 
+      (. js/document (getElementById "fbbi"))))} "📣" ]))
+
 (defn start []
    ;; start is called by init and after code reloading finishes
    ;; this is controlled by the :after-load in the config
-  (let [div-to-mount (js/document.getElementById "feedbackbox")
-        get-attr (fn [attrname] (.getAttribute div-to-mount attrname))
-        endpoint (get-attr "endpoint")
-        greeting (get-attr "greeting")
-        feedback-placeholder (get-attr "feedback-placeholder")
-        email-placeholder (get-attr "email-placeholder")]
-    (rum/mount (feedback-box endpoint
-                             :greeting greeting
-                             :feedback-placeholder feedback-placeholder
-                             :email-placeholder email-placeholder)
-               div-to-mount)))
+  (let [ep (.getAttribute (. js/document (getElementById "dartar")) "data-endpoint")
+        gr (.getAttribute (. js/document (getElementById "dartar")) "data-greeting")
+        fp (.getAttribute (. js/document (getElementById "dartar")) "data-feedback-placeholder")
+        emp (.getAttribute (. js/document (getElementById "dartar")) "data-email-placeholder")]
+        ;;(reset! endpoint ep)
+    (.log js/console ep gr fp emp  )
+    (rum/mount (init-feedback-button) 
+      (. js/document (getElementById "fbbi")))))
+
+
 
 (defn ^:export init []
    ;; init is called ONCE when the page loads

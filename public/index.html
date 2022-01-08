@@ -10,6 +10,21 @@
     * {
         font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
     }
+    .prettyhover {
+      cursor:  pointer;
+      background-color: #fff;
+      transition:  background-color 0.5s;
+    }
+        .prettyhover:hover {
+      cursor:  pointer;
+      background-color: gold;
+      transition:  background-color 0.5s;
+    }
+    #fbbi {width:  30px; height:  30px;}
+    #fbbi, #backtoblack { text-align:  center; border-radius: 1em;}
+    #feedback-form {width:  250px; border:  1px solid forestgreen;
+                    border-width:  4px 0 0 0px;
+                     box-shadow:  #888 5px 5px 5px; }
 </style>
 
 <body>
@@ -19,7 +34,15 @@
         The objective is to send feedback to an endpoint via HTTP.
     </p>
 
-    <h2>Feedback Box</h2>
+
+    <div id='dartar'
+     data-endpoint="/endpoint" 
+     data-greeting="Send us feedback about this page"
+     data-feedback-placeholder="Wowzers you guys..." 
+     data-email-placeholder="user@jpc.com">
+<!-- add mood drop-down & selection -->
+
+    <div id='fbbi'></div>
 
     <div id="feedbackbox"
          endpoint="/endpoint"></div>

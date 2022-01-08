@@ -11,6 +11,6 @@
         "react-dom": "latest"
     },
     "devDependencies": {
-        "shadow-cljs": "latest"
+        "shadow-cljs": "^2.16.12"
     }
 }
