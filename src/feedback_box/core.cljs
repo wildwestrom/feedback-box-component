@@ -65,7 +65,9 @@
      [:style styles]
      [:form.form-container#feedback-form
       {:on-submit #(do (.preventDefault %)
-                       (send-data endpoint))}
+                       (rum/mount (init-feedback-button) (. js/document (getElementById "fbbi")))
+                       (send-data endpoint)
+                       )}
       (when-not endpoint
         (let [warning-msg "Warning: No endpoint set!"]
           (js/console.log warning-msg)
@@ -79,14 +81,6 @@
         :placeholder (or feedback-placeholder
                          "Type feedback here.")
         :required true}]
-      [:span.form-field
-       [:label {:for :email} "Email:"]
-       [:input {:id "email-input"
-                :form "feedback-form"
-                :type :email
-                :placeholder (or email-placeholder
-                                 "user@example.com")
-                :required true}]]
       [:input {:type :submit
                :required true}]]]))
 
