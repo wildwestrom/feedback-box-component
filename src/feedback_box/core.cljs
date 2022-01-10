@@ -36,14 +36,11 @@
 
 
 (defn send-data [endpoint]
-  (let [form-data (js/FormData.
-                   (js/document.getElementById "feedback-form"))
-        *aft* (.getAttribute (. js/document (getElementById "aft")) "data-aft")
+  (let [*aft* (.getAttribute (. js/document (getElementById "aft")) "data-aft")
         in (.-value (. js/document (getElementById "feedback-input")))]
     (POST endpoint
       { 
-        :params 
-        {:feedback-content in}
+        :params  {:feedback (str in)}
         :headers {"x-xsrf-token" *aft*}
         :format :text})
     (.log js/console "aft: " *aft*)

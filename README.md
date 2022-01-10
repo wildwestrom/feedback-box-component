@@ -39,15 +39,69 @@ As well as the id called fbbi
 
 ```html
   <div id='fbbi'></div>
-  ```
+```
 
 
   Finally, in index.html
   calls and intializes
 
   ```html
-      <script src="/js/feedbackbocks.js" type="text/javascript"></script>
+  <script src="/js/feedbackbocks.js" type="text/javascript"></script>
     <script>
         feedback_box.core.init();
     </script>
-    ```
+  ```
+
+
+
+
+The core.cljs file grabs the aft from the html page 
+and also gets the textarea.value from the feedback bocks.
+
+
+  ```clj
+  *aft* (.getAttribute (. js/document (getElementById "aft")) "data-aft")
+        in (.-value (. js/document (getElementById "feedback-input")))
+  ```
+
+
+
+The POST is done via cljs-ajax
+
+```clj
+    (POST endpoint
+      { 
+        :params 
+        {:feedback-content in}
+        :headers {"x-xsrf-token" *aft*}
+        :format :text})
+    (.log js/console "aft: " *aft*)
+    (.log js/console "input: " in)
+```
+
+
+More :params can be added to the :params map.
+
+
+
+
+On the server `.clj` file you will need a route to accept the POST
+
+```clj
+  (POST "/feedback"  [_ :as r]  
+    (let [client-url   (get (:headers r) "referer")
+          client-email (:special-auth-email (:session r))
+          bod (slurp (:body r))
+          bbod (clojure.edn/read-string bod)
+          feedback (:feedback bbod)]  
+      (prn "; r " r )
+      (prn "; email " client-email)
+      (prn "client-url;; " client-url)
+      (prn "bbod;; " bbod)
+      (prn "feedback;; " feedback)
+      ;;save the feedback to the server
+      (prn "save the feedback to the server here.")
+      {:status 200  :headers {"Content-Type" "text"} :body (str "received from " client-email " at " client-url)}))
+```
+
+That is an example using Ring and Compojure.  In general, one can break the request into relevant subkeys, but one must `clojure.edn/read-string` on the body of the :format :text POST.
