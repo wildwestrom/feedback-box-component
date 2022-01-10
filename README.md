@@ -9,13 +9,16 @@ A .js file you can embed on any page to add a feedback form. It is built using R
 
 For a release build:
 ```console
-shadow-cljs release feedbackbocks 
-
+shadow-cljs release feedbackbocks
+# or
+pnpm release
 ```
 
 For an interactive watch build
 ```console
 shadow-cljs watch feedbackbocks
+# or
+pnpm watch
 ```
 
 ## Usage
@@ -24,9 +27,9 @@ This component expects a `<div>` with an `id` of `dartar`.
 
 ```html
 <div id='dartar'
-     data-endpoint="/feedback" 
+     data-endpoint="/feedback"
      data-greeting="Send us feedback about this page"
-     data-feedback-placeholder="Wowzers you guys..." 
+     data-feedback-placeholder="Wowzers you guys..."
      data-email-placeholder="user@jpc.com"></div>
 ```
 
@@ -58,7 +61,7 @@ As well as the id called fbbi
 
 
 
-The core.cljs file grabs the aft from the html page 
+The core.cljs file grabs the aft from the html page
 and also gets the textarea.value from the feedback bocks.
 
 
@@ -90,12 +93,12 @@ More :params can be added to the :params map.
 On the server `.clj` file you will need a route to accept the POST
 
 ```clj
-  (POST "/feedback"  [_ :as r]  
+  (POST "/feedback"  [_ :as r]
     (let [client-url   (get (:headers r) "referer")
           client-email (:special-auth-email (:session r))
           bod (slurp (:body r))
           bbod (clojure.edn/read-string bod)
-          feedback (:feedback bbod)]  
+          feedback (:feedback bbod)]
       (prn "; r " r )
       (prn "; email " client-email)
       (prn "client-url;; " client-url)
@@ -103,8 +106,8 @@ On the server `.clj` file you will need a route to accept the POST
       (prn "feedback;; " feedback)
       ;;save the feedback to the server
       (prn "save the feedback to the server here.")
-      {:status 200  
-       :headers {"Content-Type" "text"} 
+      {:status 200
+       :headers {"Content-Type" "text"}
        :body (str "received from " client-email " at " client-url)}))
 ```
 

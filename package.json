@@ -1,16 +1,16 @@
 {
     "scripts": {
         "deps": "pnpm install",
-        "watch": "shadow-cljs watch app",
-        "release": "shadow-cljs release app",
+        "watch": "shadow-cljs watch feedbackbocks",
+        "release": "shadow-cljs release feedbackbocks",
         "clean": "rm -rf target; rm -rf public/js"
     },
     "dependencies": {
-        "create-react-class": "latest",
-        "react": "latest",
-        "react-dom": "latest"
+        "create-react-class": "15",
+        "react": "17",
+        "react-dom": "17"
     },
     "devDependencies": {
-        "shadow-cljs": "^2.16.12"
+        "shadow-cljs": "latest"
     }
 }
