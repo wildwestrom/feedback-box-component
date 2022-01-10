@@ -23,24 +23,24 @@ shadow-cljs watch feedbackbocks
 This component expects a `<div>` with an `id` of `dartar`.
 
 ```html
-     <div id='dartar'
+<div id='dartar'
      data-endpoint="/feedback" 
      data-greeting="Send us feedback about this page"
      data-feedback-placeholder="Wowzers you guys..." 
-     data-email-placeholder="user@jpc.com">
+     data-email-placeholder="user@jpc.com"></div>
 ```
 
 As well as the aft (csrf anti forgery token)
 
 ```html
 <div id='aft' style='display:none;' value={{aft}} data-aft={{aft}}></div>
- <!--the antiforgery token must be provided by the server rendering this file;; selmer is used here-->
+<!--the antiforgery token must be provided by the server rendering this file;; selmer is used here-->
 ```
 
 As well as the id called fbbi
 
 ```html
-  <div id='fbbi'></div>
+<div id='fbbi'></div>
 ```
 
 
@@ -63,8 +63,8 @@ and also gets the textarea.value from the feedback bocks.
 
 
   ```clj
-  *aft* (.getAttribute (. js/document (getElementById "aft")) "data-aft")
-        in (.-value (. js/document (getElementById "feedback-input")))
+*aft* (.getAttribute (. js/document (getElementById "aft")) "data-aft")
+in (.-value (. js/document (getElementById "feedback-input")))
   ```
 
 
@@ -72,14 +72,12 @@ and also gets the textarea.value from the feedback bocks.
 The POST is done via cljs-ajax
 
 ```clj
-    (POST endpoint
-      { 
-        :params 
-        {:feedback-content in}
-        :headers {"x-xsrf-token" *aft*}
-        :format :text})
-    (.log js/console "aft: " *aft*)
-    (.log js/console "input: " in)
+(POST endpoint
+  { :params {:feedback-content in}
+    :headers {"x-xsrf-token" *aft*}
+    :format :text})
+  (.log js/console "aft: " *aft*)
+  (.log js/console "input: " in)
 ```
 
 
@@ -104,7 +102,9 @@ On the server `.clj` file you will need a route to accept the POST
       (prn "feedback;; " feedback)
       ;;save the feedback to the server
       (prn "save the feedback to the server here.")
-      {:status 200  :headers {"Content-Type" "text"} :body (str "received from " client-email " at " client-url)}))
+      {:status 200  
+       :headers {"Content-Type" "text"} 
+       :body (str "received from " client-email " at " client-url)}))
 ```
 
 That is an example using Ring and Compojure.  In general, one can break the request into relevant subkeys, but one must `clojure.edn/read-string` on the body of the :format :text POST.
