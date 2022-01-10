@@ -63,8 +63,9 @@ and also gets the textarea.value from the feedback bocks.
 
 
   ```clj
-*aft* (.getAttribute (. js/document (getElementById "aft")) "data-aft")
-in (.-value (. js/document (getElementById "feedback-input")))
+(let [*aft* (.getAttribute (. js/document (getElementById "aft")) "data-aft")
+      in (.-value (. js/document (getElementById "feedback-input")))]
+      ...)
   ```
 
 
