@@ -30,9 +30,11 @@
 <body>
     <h1>Test Page</h1>
 
-    <p>This is a test page for a react component I'm working in.
-        The objective is to send feedback to an endpoint via HTTP.
+    <p>Test page for feedback form to send feedback to an endpoint via HTTP w/ antiforgery token embedded in this page.
     </p>
+
+ <div id='aft' style='display:none;' value={{aft}} data-aft={{aft}}></div>
+ <!--the antiforgery token must be provided by the server rendering this file;; selmer is used here-->
 
 
     <div id='dartar'
