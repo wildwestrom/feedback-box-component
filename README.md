@@ -3,6 +3,8 @@
 ## What is it?
 A .js file you can embed on any page to add a feedback form. It is built using Rum and Shadow-cljs.
 
+<img width="272" alt="Screen Shot 2022-01-09 at 11 12 46 PM" src="https://user-images.githubusercontent.com/451489/148724673-1a7e0134-a7d8-40eb-abfa-4294306e74c6.png">
+
 ## Build Instructions
 
 For a release build:
@@ -51,6 +53,7 @@ As well as the id called fbbi
         feedback_box.core.init();
     </script>
   ```
+
 
 
 
