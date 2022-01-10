@@ -7,12 +7,12 @@
 
  :nrepl {:port 8777}
 
- :builds {:app {:target     :browser
+ :builds {:feedbackbocks {:target     :browser
                 :output-dir "public/js"
                 :asset-path "/js"
 
                 :modules
-                {:main {:entries [feedback-box.core]}}
+                {:feedbackbocks {:entries [feedback-box.core]}}
 
                 :release {:output-dir "target"}
 
@@ -20,7 +20,7 @@
                 ;; before live-reloading any code call this function
                 {;;:before-load feedback-box.core/stop
                  ;; after live-reloading finishes call this function
-                 ;;:after-load  feedback-box.core/start
+                 :after-load  feedback-box.core/start
                  :http-root   "public"
                  :http-port   8700
                  ;;:preloads    [devtools.preload]

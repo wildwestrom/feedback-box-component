@@ -37,9 +37,17 @@
 
 (defn send-data [endpoint]
   (let [form-data (js/FormData.
-                   (js/document.getElementById "feedback-form"))]
+                   (js/document.getElementById "feedback-form"))
+        *aft* (.getAttribute (. js/document (getElementById "aft")) "data-aft")
+        in (.-value (. js/document (getElementById "feedback-input")))]
     (POST endpoint
-      {:body form-data})))
+      { 
+        :params 
+        {:feedback-content in}
+        :headers {"x-xsrf-token" *aft*}
+        :format :text})
+    (.log js/console "aft: " *aft*)
+    (.log js/console "input: " in)))
 
 (rum/defc feedback-box
   [options]
