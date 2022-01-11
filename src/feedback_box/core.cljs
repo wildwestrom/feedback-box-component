@@ -4,124 +4,103 @@
             [garden.selectors :as selector]
             [rum.core :as rum]))
 
-(def endpoint (atom ""))
-
-
-
 (def styles
   (css
-   [:#warning {:background :yellow
-               :font-weight :bold
-               :font-size "1.5rem"
-               :border-width "1px"
-               :border-style :solid
-               :border-radius ".375rem"
-               :padding ".25rem"}
-    [(selector/& selector/before) {:content "\"⚠️\""
-                                   :padding-right ".375rem"}]]
-   [:.greeting {:font-size "1.5rem"}
-    [(selector/& selector/before) {:content "\"📣\""
-                                   :padding-right ".375rem"}]]
-   [:.form-container {:display :flex
-                      :flex-direction :column
-                      :text-align :center
-                      :max-width "60ch"
-                      :gap ".5em"}
-    [:textarea {:resize :vertical
-                :min-height "2rem"}]
-    [:span.form-field {:display :flex
-                       :gap ".5rem"}
-     [:input {:flex-grow 1}]]]))
-
-
+    {:pretty-print? false}
+    [:.toggle-button {:cursor :pointer
+                      :background-color "#fff"
+                      :font-size "1.5rem"
+                      :width :min-content
+                      :border-width "2px"
+                      :border-radius "1em"
+                      :transition [:background-color "0.5s"]
+                      :user-select :none}
+     [:&:hover {:background-color :gold}]]
+    [:#feedback-form {:width :max-content
+                      :border [["1px" :solid :forestgreen]]
+                      :border-width [["4px" 0 0 0]]
+                      :box-shadow [["#888" "5px" "5px" "5px"]]}]
+    [:#warning {:background :yellow
+                :font-weight :bold
+                :font-size "1.5rem"
+                :border-width "1px"
+                :border-style :solid
+                :border-radius ".375rem"
+                :padding ".25rem"}
+     [:&:before {:content "\"⚠️\""
+                 :padding-right ".375rem"}]]
+    [:.greeting {:font-size "1.5rem"}]
+    [:.form-container {:display :flex
+                       :flex-direction :column
+                       :text-align :center
+                       :max-width "60ch"
+                       :gap ".5em"}
+     [:textarea {:resize :vertical
+                 :min-height "2rem"}]
+     [:span.form-field {:display :flex
+                        :gap ".5rem"}
+      [:input {:flex-grow 1}]]]))
 
 (defn send-data [endpoint]
   (let [*aft* (.getAttribute (. js/document (getElementById "aft")) "data-aft")
         in (.-value (. js/document (getElementById "feedback-input")))]
     (POST endpoint
-      { 
-        :params  {:feedback (str in)}
-        :headers {"x-xsrf-token" *aft*}
-        :format :text})
+          {:params  {:feedback (str in)}
+           :headers {"x-xsrf-token" *aft*}
+           :format :text})
     (.log js/console "aft: " *aft*)
     (.log js/console "input: " in)))
 
-(rum/defc feedback-box
-  [options]
-  (let [{:keys [endpoint
-                greeting
-                feedback-placeholder
-                email-placeholder]}
-        ;; I'd like to destructure using `:or`, but unfortunately,
-        ;; The function that calls this component will send the keys
-        ;; regardless of whether they're `nil` or not.
-        options]
+(rum/defcs feedback-box < (rum/local false :showing?)
+  [state]
+  (let [showing?             (:showing? state)
+        dartar               (. js/document (getElementById "dartar"))
+        endpoint             (.getAttribute dartar "data-endpoint")
+        greeting             (.getAttribute dartar "data-greeting")
+        feedback-placeholder (.getAttribute dartar "data-feedback-placeholder")
+        email-placeholder    (.getAttribute dartar "data-email-placeholder")]
+    (.log js/console endpoint greeting feedback-placeholder email-placeholder)
     [:<>
-    [:div {:id "backtoblack"
-         :class "prettyhover"
-         :on-click 
-          (fn [] 
-           (rum/mount (init-feedback-button) (. js/document (getElementById "fbbi"))))} "📣" ]
      [:style styles]
-     [:form.form-container#feedback-form
-      {:on-submit #(do (.preventDefault %)
-                       (rum/mount (init-feedback-button) (. js/document (getElementById "fbbi")))
-                       (send-data endpoint)
-                       )}
-      (when-not endpoint
-        (let [warning-msg "Warning: No endpoint set!"]
-          (js/console.log warning-msg)
-          [:span#warning warning-msg]))
-      [:span.greeting (or greeting
-                          "Please send us feedback.")]
-      [:textarea
-       {:id "feedback-input"
-        :form "feedback-form"
-        :rows 5
-        :placeholder (or feedback-placeholder
-                         "Type feedback here.")
-        :required true}]
-      [:input {:type :submit
-               :required true}]]]))
-
-(rum/defc init-feedback-button
-  []
-  (let [ep (.getAttribute (. js/document (getElementById "dartar")) "data-endpoint")
-        gr (.getAttribute (. js/document (getElementById "dartar")) "data-greeting")
-        fp (.getAttribute (. js/document (getElementById "dartar")) "data-feedback-placeholder")
-        emp (.getAttribute (. js/document (getElementById "dartar")) "data-email-placeholder")]
-  [:div {:id "fbbi"
-         :class "prettyhover"
-         :on-click 
-          (fn [] 
-           (rum/mount (feedback-box 
-                             {:endpoint ep
-                             :greeting gr
-                             :feedback-placeholder fp
-                             :email-placeholder emp}) 
-      (. js/document (getElementById "fbbi"))))} "📣" ]))
+     [:div {:class "toggle-button"
+            :on-click
+            (fn [_] (swap! showing? not))}
+      "📣"]
+     (when @showing?
+       [:<>
+        [:form.form-container#feedback-form
+         {:on-submit #(do (.preventDefault %)
+                          (reset! showing? false)
+                          (send-data endpoint))}
+         (when-not endpoint
+           (let [warning-msg "Warning: No endpoint set!"]
+             (js/console.log warning-msg)
+             [:span#warning warning-msg]))
+         [:span.greeting (or greeting
+                             "Please send us feedback.")]
+         [:textarea
+          {:id          "feedback-input"
+           :form        "feedback-form"
+           :rows        5
+           :placeholder (or feedback-placeholder
+                            "Type feedback here.")
+           :required    true}]
+         [:input {:type     :submit
+                  :required true}]]])]))
 
 (defn start []
-   ;; start is called by init and after code reloading finishes
-   ;; this is controlled by the :after-load in the config
-  (let [ep (.getAttribute (. js/document (getElementById "dartar")) "data-endpoint")
-        gr (.getAttribute (. js/document (getElementById "dartar")) "data-greeting")
-        fp (.getAttribute (. js/document (getElementById "dartar")) "data-feedback-placeholder")
-        emp (.getAttribute (. js/document (getElementById "dartar")) "data-email-placeholder")]
-        ;;(reset! endpoint ep)
-    (.log js/console ep gr fp emp  )
-    (rum/mount (init-feedback-button) 
-      (. js/document (getElementById "fbbi")))))
-
-
+  ;; start is called by init and after code reloading finishes
+  ;; this is controlled by the :after-load in the config
+  (rum/mount (feedback-box)
+             (. js/document (getElementById "fbbi"))))
 
 (defn ^:export init []
-   ;; init is called ONCE when the page loads
-   ;; this is called in the index.html and must be exported
-   ;; so it is available even in :advanced release builds
+  ;; init is called ONCE when the page loads
+  ;; this is called in the index.html and must be exported
+  ;; so it is available even in :advanced release builds
   (start))
 
 (defn stop []
-   ;; stop is called before any code is reloaded
-   ;; this is controlled by :before-load in the config
+  ;; stop is called before any code is reloaded
+  ;; this is controlled by :before-load in the config
   (js/console.log "stop"))
