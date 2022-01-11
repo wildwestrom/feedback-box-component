@@ -19,12 +19,12 @@
 
            :devtools
            {;; before live-reloading any code call this function
-            ;; :before-load feedback-box.core/stop
+            :before-load feedback-box.core/stop
             ;; after live-reloading finishes call this function
-            ;; :after-load  feedback-box.core/start
+            :after-load  feedback-box.core/start
             :http-root   "public"
             :http-port   8700
             :preloads    [devtools.preload]}}
 
-          :test {:target :browser-test
+          :test {:target   :browser-test
                  :test-dir "test"}}}
