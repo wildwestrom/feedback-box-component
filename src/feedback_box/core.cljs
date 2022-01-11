@@ -16,10 +16,6 @@
                       :transition [:background-color "0.5s"]
                       :user-select :none}
      [:&:hover {:background-color :gold}]]
-    [:#feedback-form {:width :max-content
-                      :border [["1px" :solid :forestgreen]]
-                      :border-width [["4px" 0 0 0]]
-                      :box-shadow [["#888" "5px" "5px" "5px"]]}]
     [:#warning {:background :yellow
                 :font-weight :bold
                 :font-size "1.5rem"
@@ -29,12 +25,20 @@
                 :padding ".25rem"}
      [:&:before {:content "\"⚠️\""
                  :padding-right ".375rem"}]]
-    [:.greeting {:font-size "1.5rem"}]
+    [:.greeting {:font-size "1.5rem"}
+     [:&:before {:content "\"📣\""
+                 :padding-right ".375rem"}]]
     [:.form-container {:display :flex
                        :flex-direction :column
                        :text-align :center
-                       :max-width "60ch"
-                       :gap ".5em"}
+                       :max-width "50ch"
+                       :gap ".5em"
+                       :padding "1em"
+                       :width :fit-content
+                       :border [["1px" :solid :forestgreen]]
+                       :border-top-width "4px"
+                       :border-radius ".5em"
+                       :box-shadow [["#888" "5px" "5px" "5px"]]}
      [:textarea {:resize :vertical
                  :min-height "2rem"}]
      [:span.form-field {:display :flex
