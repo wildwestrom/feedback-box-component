@@ -85,6 +85,14 @@
            :placeholder (or feedback-placeholder
                             "Type feedback here.")
            :required    true}]
+         [:span.form-field
+          [:label {:for :email} "Email:"]
+          [:input {:id "email-input"
+                   :form "feedback-form"
+                   :type :email
+                   :placeholder (or email-placeholder
+                                    "user@example.com")
+                   :required true}]]
          [:input {:type     :submit
                   :required true}]]])]))
 
