@@ -1,58 +1,14 @@
 (ns feedback-box.core
   (:require [ajax.core :refer [POST]]
-            [garden.core :refer [css]]
-            [garden.selectors :as selector]
             [rum.core :as rum]))
-
-(def styles
-  (css
-    {:pretty-print? false}
-    [:.toggle-button {:cursor           :pointer
-                      :background-color "#fff"
-                      :font-size        "1.5rem"
-                      :width            :min-content
-                      :border-width     "2px"
-                      :border-radius    "1em"
-                      :transition       [:background-color "0.5s"]
-                      :user-select      :none}
-     [:&:hover {:background-color :gold}]]
-    [:#warning {:background    :yellow
-                :font-weight   :bold
-                :font-size     "1.5rem"
-                :border-width  "1px"
-                :border-style  :solid
-                :border-radius ".375rem"
-                :padding       ".25rem"}
-     [:&:before {:content       "\"⚠️\""
-                 :padding-right ".375rem"}]]
-    [:.greeting {:font-size "1.5rem"}
-     [:&:before {:content       "\"📣\""
-                 :padding-right ".375rem"}]]
-    [:.form-container {:display          :flex
-                       :background       :white
-                       :flex-direction   :column
-                       :text-align       :center
-                       :max-width        "50ch"
-                       :gap              ".5em"
-                       :padding          "1em"
-                       :width            :fit-content
-                       :border           [["1px" :solid :forestgreen]]
-                       :border-top-width "4px"
-                       :border-radius    ".5em"
-                       :box-shadow       [["#888" "5px" "5px" "5px"]]}
-     [:textarea {:resize     :vertical
-                 :min-height "2rem"}]
-     [:span.form-field {:display :flex
-                        :gap     ".5rem"}
-      [:input {:flex-grow 1}]]]))
 
 (defn send-data [endpoint]
   (let [*aft* (.getAttribute (. js/document (getElementById "aft")) "data-aft")
-        in (.-value (. js/document (getElementById "feedback-input")))]
+        in    (.-value (. js/document (getElementById "feedback-input")))]
     (POST endpoint
           {:params  {:feedback (str in)}
            :headers {"x-xsrf-token" *aft*}
-           :format :text})
+           :format  :text})
     (.log js/console "aft: " *aft*)
     (.log js/console "input: " in)))
 
@@ -66,7 +22,6 @@
         email-placeholder    (.getAttribute dartar "data-email-placeholder")]
     (.log js/console endpoint greeting feedback-placeholder email-placeholder)
     [:<>
-     [:style styles]
      [:div {:class "toggle-button"
             :on-click
             (fn [_] (swap! showing? not))}
