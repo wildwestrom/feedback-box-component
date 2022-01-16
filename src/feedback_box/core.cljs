@@ -29,6 +29,7 @@
      [:&:before {:content       "\"📣\""
                  :padding-right ".375rem"}]]
     [:.form-container {:display          :flex
+                       :background       :white
                        :flex-direction   :column
                        :text-align       :center
                        :max-width        "50ch"
