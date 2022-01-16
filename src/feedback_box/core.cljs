@@ -7,42 +7,42 @@
 (def styles
   (css
     {:pretty-print? false}
-    [:.toggle-button {:cursor :pointer
+    [:.toggle-button {:cursor           :pointer
                       :background-color "#fff"
-                      :font-size "1.5rem"
-                      :width :min-content
-                      :border-width "2px"
-                      :border-radius "1em"
-                      :transition [:background-color "0.5s"]
-                      :user-select :none}
+                      :font-size        "1.5rem"
+                      :width            :min-content
+                      :border-width     "2px"
+                      :border-radius    "1em"
+                      :transition       [:background-color "0.5s"]
+                      :user-select      :none}
      [:&:hover {:background-color :gold}]]
-    [:#warning {:background :yellow
-                :font-weight :bold
-                :font-size "1.5rem"
-                :border-width "1px"
-                :border-style :solid
+    [:#warning {:background    :yellow
+                :font-weight   :bold
+                :font-size     "1.5rem"
+                :border-width  "1px"
+                :border-style  :solid
                 :border-radius ".375rem"
-                :padding ".25rem"}
-     [:&:before {:content "\"⚠️\""
+                :padding       ".25rem"}
+     [:&:before {:content       "\"⚠️\""
                  :padding-right ".375rem"}]]
     [:.greeting {:font-size "1.5rem"}
-     [:&:before {:content "\"📣\""
+     [:&:before {:content       "\"📣\""
                  :padding-right ".375rem"}]]
-    [:.form-container {:display :flex
-                       :flex-direction :column
-                       :text-align :center
-                       :max-width "50ch"
-                       :gap ".5em"
-                       :padding "1em"
-                       :width :fit-content
-                       :border [["1px" :solid :forestgreen]]
+    [:.form-container {:display          :flex
+                       :flex-direction   :column
+                       :text-align       :center
+                       :max-width        "50ch"
+                       :gap              ".5em"
+                       :padding          "1em"
+                       :width            :fit-content
+                       :border           [["1px" :solid :forestgreen]]
                        :border-top-width "4px"
-                       :border-radius ".5em"
-                       :box-shadow [["#888" "5px" "5px" "5px"]]}
-     [:textarea {:resize :vertical
+                       :border-radius    ".5em"
+                       :box-shadow       [["#888" "5px" "5px" "5px"]]}
+     [:textarea {:resize     :vertical
                  :min-height "2rem"}]
      [:span.form-field {:display :flex
-                        :gap ".5rem"}
+                        :gap     ".5rem"}
       [:input {:flex-grow 1}]]]))
 
 (defn send-data [endpoint]
@@ -91,12 +91,12 @@
            :required    true}]
          [:span.form-field
           [:label {:for :email} "Email:"]
-          [:input {:id "email-input"
-                   :form "feedback-form"
-                   :type :email
+          [:input {:id          "email-input"
+                   :form        "feedback-form"
+                   :type        :email
                    :placeholder (or email-placeholder
                                     "user@example.com")
-                   :required true}]]
+                   :required    true}]]
          [:input {:type     :submit
                   :required true}]]])]))
 
